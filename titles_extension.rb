@@ -1,5 +1,5 @@
 # Uncomment this if you reference any of your controllers in activate
-require_dependency 'application_controller'
+require_dependency 'application'
 
 class TitlesExtension < Spree::Extension
   version "1.0"
@@ -11,7 +11,9 @@ class TitlesExtension < Spree::Extension
     AppConfiguration.class_eval do
       # Override this default_title in the preferences table or with similar 
       # code in your site extension.
-      preference :default_title, :string, :default => 'TitlesExtension - default_title - edit me'
+      unless Spree::Config[:default_title]
+        preference :default_title, :string, :default => 'TitlesExtension - default_title - edit me' 
+      end
     end
     
     Spree::BaseController.class_eval do
