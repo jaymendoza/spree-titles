@@ -4,28 +4,17 @@ require_dependency 'application'
 class TitlesExtension < Spree::Extension
   version "1.0"
   description "Replaces the general Spree title with accurate titles."
-  url "http://github.com/eliotsykes/spree-titles"
+  url "http://github.com/jaymendoza/spree-titles"
 
   def activate
-
-    AppConfiguration.class_eval do
-      # Override this default_title in the preferences table or with similar 
-      # code in your site extension.
-      unless Spree::Config[:default_title]
-        preference :default_title, :string, :default => 'TitlesExtension - default_title - edit me' 
-      end
-    end
-    
     Spree::BaseController.class_eval do
-      
       def accurate_title
-        return nil
+        nil
       end
       
       def default_title
-        title_string = accurate_title
-        return title_string unless title_string.blank?
-        return Spree::Config[:default_title]
+        title = Spree::Config[:site_name]
+        accurate_title ? "#{title}: #{accurate_title}" : title
       end
     end
     
@@ -37,31 +26,31 @@ class TitlesExtension < Spree::Extension
     
     PasswordResetsController.class_eval do
       def accurate_title
-        return translate('forgot_password')
+        translate('forgot_password')
       end
     end
     
     ProductsController.class_eval do
       def accurate_title
-        return @product.name if @product
+        @product.name if @product
       end
     end
     
     TaxonsController.class_eval do
       def accurate_title
-        return @taxon.name if @taxon
+        @taxon.name if @taxon
       end
     end
     
     UsersController.class_eval do
       def accurate_title
-        return translate('new_customer')
+        translate('new_customer')
       end
     end
     
     UserSessionsController.class_eval do
       def accurate_title
-        return translate('login_as_existing')
+        translate('login_as_existing')
       end
     end
     
